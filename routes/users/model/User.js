@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
     lastname: String,
     email: {type:String, unique: true},
     username: {type: String, unique: true}, 
-    password: String
+    password: String,
+    orderHistory: [{ type: mongoose.Schema.ObjectId, ref: "order" }], 
 },{timestamps: true});
 
 //error code 11000

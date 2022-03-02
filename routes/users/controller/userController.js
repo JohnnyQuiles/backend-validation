@@ -3,6 +3,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { errorHandler } = require('../utils/errorHandler');
 
+const getCurrentUser = async (req, res) => {
+    try {
+        const { decodedToken } = res.locals;
+
+        const foundUser = await User.findOne({ email: decodedToken.email }).populate("orderHistory", "-orderOwner-__v");
+        console.log("FOUND USER:", foundUser);
+
+        res.status(200).json({ message: 'Current user and populating order history', payload: foundUser});
+    } catch (error) {
+        res.status(500).json({ message: 'error', error: error.message });
+    }
+}
 const createUser = async (req, res) => {
     try {
         const { firstName, lastName, username, email, password } = req.body;
@@ -68,6 +80,7 @@ module.exports = {
     createUser,
     userLogin,
     updateTheProfile,
+    getCurrentUser
 
 
 };
